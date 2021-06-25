@@ -1,6 +1,6 @@
 {
   "name": "swagger-controls",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Convert classes to swagger documentation using NestJs decorators",
   "main": "./dist/index.js",
   "scripts": {
