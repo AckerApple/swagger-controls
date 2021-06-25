@@ -1,29 +1,54 @@
 import { INestApplication, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { NestFactory } from '@nestjs/core'
-import { ServerObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { DocumentBuilder } from '@nestjs/swagger';
+import { ServerObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface'
+import { DocumentBuilder } from '@nestjs/swagger'
 import { SwaggerModule } from '@nestjs/swagger'
+import { NestFactory } from '@nestjs/core'
 import * as fs from 'fs'
 
-interface Options {
+export interface Options {
   filePath?: string
   servers?: string | ServerObject[] // url dropdown select of servers
+
   deepScanRoutes?: boolean
   ignoreGlobalPrefix?: boolean
+
+  title?: string
+  description?: string
+  externalDoc?: [string, string] // [title, url]
+  version?: string
 }
 
-export default async function swaggerJsonByControls(
+export async function swaggerJsonByControls(
   controllers: any[],
   {
     filePath, servers,
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
+
+    title, description, externalDoc, version
   }: Options = {}
 ): Promise<string> {
   const app: INestApplication = await getDocsByControllers( controllers )
   const buildDocs = new DocumentBuilder() as any
 
-  let docs = SwaggerModule.createDocument(
+  if(title) {
+    buildDocs.setTitle(title)
+  }
+
+  if(description) {
+    buildDocs.setDescription(description)
+  }
+
+  if(externalDoc) {
+    buildDocs.setExternalDoc(externalDoc[0], externalDoc[1])
+  }
+
+  if(externalDoc) {
+    buildDocs.setVersion(version)
+  }
+
+  // The official build step
+  const docs = SwaggerModule.createDocument(
     app, buildDocs, { deepScanRoutes, ignoreGlobalPrefix }
   )
 
@@ -36,10 +61,12 @@ export default async function swaggerJsonByControls(
     fs.writeFileSync(filePath, docString)
   }
 
-  app.close()
+  app.close() // may not be necessary step
 
   return docString
 }
+export default swaggerJsonByControls
+
 
 export async function getDocsByControllers(
   controllers: any[]

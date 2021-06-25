@@ -1,14 +1,18 @@
 import { INestApplication, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ServerObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-interface Options {
+export interface Options {
     filePath?: string;
     servers?: string | ServerObject[];
     deepScanRoutes?: boolean;
     ignoreGlobalPrefix?: boolean;
+    title?: string;
+    description?: string;
+    externalDoc?: [string, string];
+    version?: string;
 }
-export default function swaggerJsonByControls(controllers: any[], { filePath, servers, deepScanRoutes, ignoreGlobalPrefix, }?: Options): Promise<string>;
+export declare function swaggerJsonByControls(controllers: any[], { filePath, servers, deepScanRoutes, ignoreGlobalPrefix, title, description, externalDoc, version }?: Options): Promise<string>;
+export default swaggerJsonByControls;
 export declare function getDocsByControllers(controllers: any[]): Promise<INestApplication>;
 export declare class AppModule implements NestModule {
     configure(_consumer: MiddlewareConsumer): void;
 }
-export {};

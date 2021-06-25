@@ -9,6 +9,14 @@ Convert classes into Swagger documentation by using [NestJs](https://www.npmjs.c
 
 Nope. This library simply uses NestJs decorative functionality to assist in generating Swagger files. If anything, this package sets a project up for potential future NestJs adoption.
 
+## Install
+
+This project has all the dependencies you need to make robust swagger documentations
+
+```
+npm install swagger-controls
+```
+
 ## Example
 
 In this example there are 3 files involved in an Express app generating Swagger docs by decorating classes. Those three files are `generate-swagger.ts`, `index.ts`, and  `controllers.ts`
@@ -75,5 +83,42 @@ class HealthOutput {
 
 export const controllers = [ HealthCheck ]
 ```
+
+### Options
+
+Control nuances of the `swagger.json` generation
+
+```
+interface Options {
+  filePath?: string
+  servers?: string | ServerObject[] // url dropdown select of servers
+
+  deepScanRoutes?: boolean
+  ignoreGlobalPrefix?: boolean
+
+  title?: string
+  description?: string
+  externalDoc?: [string, string] // [title, url]
+  version?: string
+}
+
+/** Example */
+
+import { version, description } from '../package.json'
+import swaggerJsonByControls from 'swagger-controls'
+import { controllers } from './controllers'
+
+const options: Options = {
+  version, description,
+  filePath: `${__dirname}/swagger.json`
+}
+
+swaggerJsonByControls(controllers, options) // generate swagger.json
+```
+
+### Learn more
+
+- [NestJs Swagger](https://docs.nestjs.com/openapi/introduction)
+- [NestJs Controllers](https://docs.nestjs.com/controllers)
 
 > ❤️ This was crafted out of love for my homey who could use a better approach but not the whole [Nest](https://www.npmjs.com/package/@nestjs/core) with it. _Acker

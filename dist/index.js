@@ -25,16 +25,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = exports.getDocsByControllers = void 0;
+exports.AppModule = exports.getDocsByControllers = exports.swaggerJsonByControls = void 0;
 const common_1 = require("@nestjs/common");
-const core_1 = require("@nestjs/core");
 const swagger_1 = require("@nestjs/swagger");
 const swagger_2 = require("@nestjs/swagger");
+const core_1 = require("@nestjs/core");
 const fs = __importStar(require("fs"));
-async function swaggerJsonByControls(controllers, { filePath, servers, deepScanRoutes = true, ignoreGlobalPrefix = true, } = {}) {
+async function swaggerJsonByControls(controllers, { filePath, servers, deepScanRoutes = true, ignoreGlobalPrefix = true, title, description, externalDoc, version } = {}) {
     const app = await getDocsByControllers(controllers);
     const buildDocs = new swagger_1.DocumentBuilder();
-    let docs = swagger_2.SwaggerModule.createDocument(app, buildDocs, { deepScanRoutes, ignoreGlobalPrefix });
+    if (title) {
+        buildDocs.setTitle(title);
+    }
+    if (description) {
+        buildDocs.setDescription(description);
+    }
+    if (externalDoc) {
+        buildDocs.setExternalDoc(externalDoc[0], externalDoc[1]);
+    }
+    if (externalDoc) {
+        buildDocs.setVersion(version);
+    }
+    const docs = swagger_2.SwaggerModule.createDocument(app, buildDocs, { deepScanRoutes, ignoreGlobalPrefix });
     docs.servers = servers;
     const docString = JSON.stringify(docs, null, 2);
     if (filePath) {
@@ -43,6 +55,7 @@ async function swaggerJsonByControls(controllers, { filePath, servers, deepScanR
     app.close();
     return docString;
 }
+exports.swaggerJsonByControls = swaggerJsonByControls;
 exports.default = swaggerJsonByControls;
 async function getDocsByControllers(controllers) {
     Reflect.defineMetadata('controllers', controllers, AppModule);
