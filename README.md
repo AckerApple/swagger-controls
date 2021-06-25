@@ -13,7 +13,7 @@ Nope. This library simply uses NestJs decorative functionality to assist in gene
 
 This project has all the dependencies you need to make robust swagger documentations
 
-```
+```sh
 npm install swagger-controls
 ```
 
@@ -22,7 +22,7 @@ npm install swagger-controls
 In this example there are 3 files involved in an Express app generating Swagger docs by decorating classes. Those three files are `generate-swagger.ts`, `index.ts`, and  `controllers.ts`
 
 ***generate-swagger.ts*** - creates swagger.json file
-```
+```typescript
 import swaggerJsonByControls from 'swagger-controls';
 import { controllers } from './controllers'
 
@@ -32,7 +32,7 @@ swaggerJsonByControls(controllers, {
 ```
 
 ***index.ts*** - Creates Express app
-```
+```typescript
 import { HealthCheck } from './controllers'
 import express from 'express'
 
@@ -42,7 +42,7 @@ app.get('/v1/health-check', new HealthCheck().get)
 ```
 
 ***controllers.ts***
-```
+```typescript
 import { ApiOperation, ApiProperty, ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, HttpStatus } from '@nestjs/common'
 
@@ -88,7 +88,7 @@ export const controllers = [ HealthCheck ]
 
 Control nuances of the `swagger.json` generation
 
-```
+```typescript
 interface Options {
   filePath?: string
   servers?: string | ServerObject[] // url dropdown select of servers
