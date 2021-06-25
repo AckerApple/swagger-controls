@@ -104,12 +104,12 @@ interface Options {
 
 /** Example */
 
-import { version, description } from '../package.json'
+import { version, description, name } from '../package.json'
 import swaggerJsonByControls from 'swagger-controls'
 import { controllers } from './controllers'
 
 const options: Options = {
-  version, description,
+  version, description, title: name,
   filePath: `${__dirname}/swagger.json`
 }
 
