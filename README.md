@@ -14,7 +14,7 @@ Nope. This library simply uses NestJs decorative functionality to assist in gene
 This project has all the dependencies you need to make robust swagger documentations
 
 ```sh
-npm install swagger-controls
+npm install swagger-controls @nestjs/platform-express @nestjs/common @nestjs/core @nestjs/swagger reflect-metadata
 ```
 
 ## Example

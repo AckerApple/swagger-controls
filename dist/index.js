@@ -66,7 +66,7 @@ let AppModule = class AppModule {
     configure(_consumer) { }
 };
 AppModule = __decorate([
-    common_1.Module({})
+    (0, common_1.Module)({})
 ], AppModule);
 exports.AppModule = AppModule;
 //# sourceMappingURL=index.js.map
