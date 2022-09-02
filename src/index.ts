@@ -49,7 +49,7 @@ export async function swaggerJsonByControls(
 
   // The official build step
   const docs = SwaggerModule.createDocument(
-    app, buildDocs, { deepScanRoutes, ignoreGlobalPrefix }
+    app, buildDocs.build(), { deepScanRoutes, ignoreGlobalPrefix }
   )
 
   // array list of servers or object details of server
