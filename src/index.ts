@@ -16,6 +16,7 @@ export interface Options {
   description?: string
   externalDoc?: [string, string] // [title, url]
   version?: string
+  tags?: string[][] // [[tagname, description]]
 }
 
 export async function swaggerJsonByControls(
@@ -25,7 +26,7 @@ export async function swaggerJsonByControls(
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
 
-    title, description, externalDoc, version
+    title, description, externalDoc, version, tags,
   }: Options = {}
 ): Promise<string> {
   const app: INestApplication = await getDocsByControllers( controllers )
@@ -43,8 +44,13 @@ export async function swaggerJsonByControls(
     buildDocs.setExternalDoc(externalDoc[0], externalDoc[1])
   }
 
-  if(externalDoc) {
+  if(version) {
     buildDocs.setVersion(version)
+  }
+
+  // [[tagName, description]]
+  if ( tags ) {
+    tags.forEach(tag => buildDocs.addTag(...tag))
   }
 
   // The official build step
