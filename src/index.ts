@@ -1,5 +1,5 @@
+import { SecuritySchemeObject, ServerObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface'
 import { INestApplication, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { ServerObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface'
 import { DocumentBuilder } from '@nestjs/swagger'
 import { SwaggerModule } from '@nestjs/swagger'
 import { NestFactory } from '@nestjs/core'
@@ -11,6 +11,8 @@ export interface Options {
 
   deepScanRoutes?: boolean
   ignoreGlobalPrefix?: boolean
+  contact?: [string, string, string] // name, url, email
+  useBearerAuth?: boolean | {name: string, securityScheme: SecuritySchemeObject} // Adds 'access-token' as an available authorization in the swagger playground
 
   title?: string
   description?: string
@@ -25,7 +27,7 @@ export async function swaggerJsonByControls(
     filePath, servers,
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
-
+    contact, useBearerAuth,
     title, description, externalDoc, version, tags,
   }: Options = {}
 ): Promise<string> {
@@ -51,6 +53,17 @@ export async function swaggerJsonByControls(
   // [[tagName, description]]
   if ( tags ) {
     tags.forEach(tag => buildDocs.addTag(...tag))
+  }
+
+  if (useBearerAuth) {
+    const securityScheme: SecuritySchemeObject = useBearerAuth === true ? { type: 'http', scheme: 'bearer' } : useBearerAuth.securityScheme
+    const name: string = useBearerAuth === true ? 'access-token' : useBearerAuth.name
+
+    buildDocs.addBearerAuth(securityScheme, name)
+  }
+
+  if (contact) {
+    buildDocs.setContact(contact[0], contact[1], contact[2])
   }
 
   // The official build step
