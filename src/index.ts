@@ -12,7 +12,9 @@ export interface Options {
   deepScanRoutes?: boolean
   ignoreGlobalPrefix?: boolean
   contact?: [string, string, string] // name, url, email
-  useBearerAuth?: boolean | {name: string, securityScheme: SecuritySchemeObject} // Adds 'access-token' as an available authorization in the swagger playground
+  
+  // Adds 'access-token' as an available authorization in the swagger playground
+  useBearerAuths?: (boolean | {name: string, securityScheme: SecuritySchemeObject})[]
 
   title?: string
   description?: string
@@ -27,7 +29,7 @@ export async function swaggerJsonByControls(
     filePath, servers,
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
-    contact, useBearerAuth,
+    contact, useBearerAuths,
     title, description, externalDoc, version, tags,
   }: Options = {}
 ): Promise<string> {
@@ -55,11 +57,12 @@ export async function swaggerJsonByControls(
     tags.forEach(tag => buildDocs.addTag(...tag))
   }
 
-  if (useBearerAuth) {
-    const securityScheme: SecuritySchemeObject = useBearerAuth === true ? { type: 'http', scheme: 'bearer' } : useBearerAuth.securityScheme
-    const name: string = useBearerAuth === true ? 'access-token' : useBearerAuth.name
-
-    buildDocs.addBearerAuth(securityScheme, name)
+  if (useBearerAuths) {
+    useBearerAuths.forEach(useBearerAuth => {
+      const securityScheme: SecuritySchemeObject = useBearerAuth === true ? { type: 'http', scheme: 'bearer' } : (useBearerAuth as any).securityScheme
+      const name: string = useBearerAuth === true ? 'access-token' : (useBearerAuth as any).name
+      buildDocs.addBearerAuth(securityScheme, name)
+    })
   }
 
   if (contact) {
