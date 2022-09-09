@@ -35,7 +35,7 @@ const swagger_1 = require("@nestjs/swagger");
 const swagger_2 = require("@nestjs/swagger");
 const core_1 = require("@nestjs/core");
 const fs = __importStar(require("fs"));
-async function swaggerJsonByControls(controllers, { filePath, servers, deepScanRoutes = true, ignoreGlobalPrefix = true, contact, useBearerAuths, title, description, externalDoc, version, tags, } = {}) {
+async function swaggerJsonByControls(controllers, { filePath, servers, deepScanRoutes = true, ignoreGlobalPrefix = true, contact, useBearerAuths, title, description, externalDocs, version, tags, } = {}) {
     const app = await getDocsByControllers(controllers);
     const buildDocs = new swagger_1.DocumentBuilder();
     if (title) {
@@ -44,8 +44,10 @@ async function swaggerJsonByControls(controllers, { filePath, servers, deepScanR
     if (description) {
         buildDocs.setDescription(description);
     }
-    if (externalDoc) {
-        buildDocs.setExternalDoc(externalDoc[0], externalDoc[1]);
+    if (externalDocs) {
+        externalDocs.forEach(externalDoc => {
+            buildDocs.setExternalDoc(externalDoc[0], externalDoc[1]);
+        });
     }
     if (version) {
         buildDocs.setVersion(version);

@@ -98,7 +98,7 @@ interface Options {
 
   title?: string
   description?: string
-  externalDoc?: [string, string] // [title, url]
+  externalDocs?: [string, string][] // [title, url][]
   version?: string
 }
 

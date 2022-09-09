@@ -18,7 +18,7 @@ export interface Options {
 
   title?: string
   description?: string
-  externalDoc?: [string, string] // [title, url]
+  externalDocs?: [string, string][] // [title, url][]
   version?: string
   tags?: string[][] // [[tagname, description]]
 }
@@ -30,7 +30,7 @@ export async function swaggerJsonByControls(
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
     contact, useBearerAuths,
-    title, description, externalDoc, version, tags,
+    title, description, externalDocs, version, tags,
   }: Options = {}
 ): Promise<string> {
   const app: INestApplication = await getDocsByControllers( controllers )
@@ -44,8 +44,10 @@ export async function swaggerJsonByControls(
     buildDocs.setDescription(description)
   }
 
-  if(externalDoc) {
-    buildDocs.setExternalDoc(externalDoc[0], externalDoc[1])
+  if(externalDocs) {
+    externalDocs.forEach(externalDoc => {
+      buildDocs.setExternalDoc(externalDoc[0], externalDoc[1])
+    })
   }
 
   if(version) {
