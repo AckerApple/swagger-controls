@@ -29,13 +29,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = exports.getDocsByControllers = exports.swaggerJsonByControls = void 0;
+exports.AppModule = exports.getDocsByControllers = exports.writeByControllers = exports.getSwaggerByControllers = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const swagger_2 = require("@nestjs/swagger");
 const core_1 = require("@nestjs/core");
 const fs = __importStar(require("fs"));
-async function swaggerJsonByControls(controllers, { filePath, servers, deepScanRoutes = true, ignoreGlobalPrefix = true, contact, useBearerAuths, title, description, externalDocs, version, tags, } = {}) {
+async function getSwaggerByControllers(controllers, { servers, deepScanRoutes = true, ignoreGlobalPrefix = true, contact, useBearerAuths, title, description, externalDocs, version, tags, } = {}) {
     const app = await getDocsByControllers(controllers);
     const buildDocs = new swagger_1.DocumentBuilder();
     if (title) {
@@ -67,15 +67,19 @@ async function swaggerJsonByControls(controllers, { filePath, servers, deepScanR
     }
     const docs = swagger_2.SwaggerModule.createDocument(app, buildDocs.build(), { deepScanRoutes, ignoreGlobalPrefix });
     docs.servers = servers;
+    return docs;
+}
+exports.getSwaggerByControllers = getSwaggerByControllers;
+async function writeByControllers(controllers, options = {}) {
+    const docs = getSwaggerByControllers(controllers, options);
     const docString = JSON.stringify(docs, null, 2);
-    if (filePath) {
-        fs.writeFileSync(filePath, docString);
+    if (options.filePath) {
+        fs.writeFileSync(options.filePath, docString);
     }
-    app.close();
     return docString;
 }
-exports.swaggerJsonByControls = swaggerJsonByControls;
-exports.default = swaggerJsonByControls;
+exports.writeByControllers = writeByControllers;
+exports.default = writeByControllers;
 async function getDocsByControllers(controllers) {
     Reflect.defineMetadata('controllers', controllers, AppModule);
     return await core_1.NestFactory.create(AppModule);

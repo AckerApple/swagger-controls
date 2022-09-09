@@ -16,8 +16,9 @@ export interface Options {
     version?: string;
     tags?: string[][];
 }
-export declare function swaggerJsonByControls(controllers: any[], { filePath, servers, deepScanRoutes, ignoreGlobalPrefix, contact, useBearerAuths, title, description, externalDocs, version, tags, }?: Options): Promise<string>;
-export default swaggerJsonByControls;
+export declare function getSwaggerByControllers(controllers: any[], { servers, deepScanRoutes, ignoreGlobalPrefix, contact, useBearerAuths, title, description, externalDocs, version, tags, }?: Options): Promise<import("@nestjs/swagger").OpenAPIObject>;
+export declare function writeByControllers(controllers: any[], options?: Options): Promise<string>;
+export default writeByControllers;
 export declare function getDocsByControllers(controllers: any[]): Promise<INestApplication>;
 export declare class AppModule implements NestModule {
     configure(_consumer: MiddlewareConsumer): void;

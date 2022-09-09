@@ -23,16 +23,16 @@ export interface Options {
   tags?: string[][] // [[tagname, description]]
 }
 
-export async function swaggerJsonByControls(
+export async function getSwaggerByControllers(
   controllers: any[],
   {
-    filePath, servers,
+    servers,
     deepScanRoutes = true,
     ignoreGlobalPrefix = true,
     contact, useBearerAuths,
     title, description, externalDocs, version, tags,
   }: Options = {}
-): Promise<string> {
+) {
   const app: INestApplication = await getDocsByControllers( controllers )
   const buildDocs = new DocumentBuilder() as any
 
@@ -79,17 +79,25 @@ export async function swaggerJsonByControls(
   // array list of servers or object details of server
   docs.servers = servers as ServerObject[]
 
+  return docs
+}
+
+export async function writeByControllers(
+  controllers: any[],
+  options: Options = {}
+): Promise<string> {
+  const docs = getSwaggerByControllers(controllers, options)
   const docString = JSON.stringify(docs, null, 2)
 
-  if(filePath) {
-    fs.writeFileSync(filePath, docString)
+  if(options.filePath) {
+    fs.writeFileSync(options.filePath, docString)
   }
 
-  app.close() // may not be necessary step
+  // app.close() // may not be necessary step
 
   return docString
 }
-export default swaggerJsonByControls
+export default writeByControllers
 
 
 export async function getDocsByControllers(

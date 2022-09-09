@@ -23,10 +23,10 @@ In this example there are 3 files involved in an Express app generating Swagger 
 
 ***generate-swagger.ts*** - creates swagger.json file
 ```typescript
-import swaggerJsonByControls from 'swagger-controls';
+import writeByControllers from 'swagger-controls';
 import { controllers } from './controllers'
 
-swaggerJsonByControls(controllers, {
+writeByControllers(controllers, {
   filePath: `${__dirname}/swagger.json`
 })
 ```
@@ -105,7 +105,7 @@ interface Options {
 /** Example */
 
 import { version, description, name } from '../package.json'
-import swaggerJsonByControls from 'swagger-controls'
+import writeByControllers from 'swagger-controls'
 import { controllers } from './controllers'
 
 const options: Options = {
@@ -113,7 +113,7 @@ const options: Options = {
   filePath: `${__dirname}/swagger.json`
 }
 
-swaggerJsonByControls(controllers, options) // generate swagger.json
+writeByControllers(controllers, options) // generate swagger.json
 ```
 
 ### Learn more
