@@ -1,8 +1,8 @@
 # swagger-controls
 
-Convert classes into Swagger documentation by using [NestJs](https://www.npmjs.com/package/@nestjs/core) decorators but without the full commitment to the NestJs modular setup.
+A tool best suited for projects that want Swagger documentation created by use of decorators. Perhaps you have an Express project and you either have considered or are having issues with keeping up with JsDocs, than this project is a great alternative you should consider.
 
-🔧 Use this tool when full NestJs adoption is too steep of a curve for your team or project. Use swagger-controls when you know you want those great swagger documentation decorators but your project still needs to maintain an Express middleware like approach.
+🔧 Use swagger-controls when you know you want those great swagger documentation decorators but your project still needs to maintained in an Express middleware like pattern.
 
 
 ## Is this a replacement for NestJs?
@@ -114,6 +114,27 @@ const options: Options = {
 }
 
 writeByControllers(controllers, options) // generate swagger.json
+```
+
+### Manipulate JSON before output
+
+In some cases you may want to alter the swagger.json object before it is written to file in order to make alterations
+
+```ts
+import * as fs from 'fs'
+import { getSwaggerByControllers } from 'swagger-controls'
+import controllers from './controllers' // your array of route controllers
+
+const docs = await getSwaggerByControllers(controllers, { ...options... })
+
+docs.components.securitySchemes.SomeApiKeyAuth = {
+  type: 'some-auth-type',
+  in: 'header',
+  name: 'scheduled_job',
+  description: 'some custom schema'
+}
+
+fs.writeFileSync(filePath, JSON.stringify(docs, null, 2)),
 ```
 
 ### Learn more
